@@ -1,65 +1,142 @@
-import Image from "next/image";
+"use client";
+
+import Link from "next/link";
+import { ApiKeyInput } from "@/components/shared/api-key-input";
+import { useApiKey } from "@/components/providers/api-key-provider";
+import {
+  Code,
+  MessageSquare,
+  BarChart3,
+  HardDrive,
+  Wrench,
+  Database,
+  Brain,
+  Shield,
+  ArrowRight,
+} from "lucide-react";
+
+const TOPICS = [
+  {
+    href: "/api-basics",
+    icon: Code,
+    title: "API Basics",
+    description:
+      "Make your first API call. Pick a model, send a prompt, see what comes back.",
+  },
+  {
+    href: "/system-prompts",
+    icon: MessageSquare,
+    title: "System Prompts",
+    description:
+      "Same question, completely different answers. All from one hidden instruction.",
+  },
+  {
+    href: "/observability",
+    icon: BarChart3,
+    title: "Observability",
+    description:
+      "What did your AI just do? How much did it cost? Find out.",
+  },
+  {
+    href: "/prompt-caching",
+    icon: HardDrive,
+    title: "Prompt Caching",
+    description:
+      "Stop paying to process the same prompt over and over.",
+  },
+  {
+    href: "/tool-calling",
+    icon: Wrench,
+    title: "Tool Calling",
+    description:
+      "LLMs can't check the weather. Unless you give them a function that can.",
+  },
+  {
+    href: "/rag",
+    icon: Database,
+    title: "RAG",
+    description:
+      "Models don't know about FLOSSK. Let's give them some context and fix that.",
+  },
+  {
+    href: "/reasoning",
+    icon: Brain,
+    title: "Reasoning",
+    description:
+      "Some questions need a scratchpad. Let the model think before it answers.",
+  },
+  {
+    href: "/security",
+    icon: Shield,
+    title: "Security",
+    description:
+      "LLMs can't tell instructions from data. Try to exploit that.",
+  },
+];
 
 export default function Home() {
+  const { hasKey } = useApiKey();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="max-w-3xl mx-auto px-4 py-10 md:py-16">
+      {/* Hero */}
+      <div className="mb-10">
+        <h1 className="text-5xl md:text-6xl font-serif text-foreground mb-4">
+          Building with LLMs
+        </h1>
+        <p className="text-lg text-muted-foreground leading-relaxed">
+          A hands-on FLOSSK workshop — every page
+          has interactive demos that make real API calls. You'll type prompts,
+          tweak parameters, and see what happens. That's how you learn this stuff.
+        </p>
+      </div>
+
+      {/* API Key — friendly nudge */}
+      {!hasKey && (
+        <div className="mb-10 p-5 rounded-xl bg-card border border-border">
+          <h2 className="text-base font-semibold text-foreground mb-1">
+            Before you start
+          </h2>
+          <p className="text-sm text-muted-foreground mb-3">
+            The demos need an OpenRouter API key. Free models are available — no credit card required.
           </p>
+          <div className="max-w-md">
+            <ApiKeyInput />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      )}
+
+      {/* Topic Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {TOPICS.map((topic) => {
+          const Icon = topic.icon;
+          return (
+            <Link
+              key={topic.href}
+              href={topic.href}
+              className="group p-5 rounded-xl border border-border bg-card hover:bg-secondary transition-colors"
+            >
+              <div className="flex items-start gap-3">
+                <Icon className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground/90 group-hover:text-foreground flex items-center gap-2">
+                    {topic.title}
+                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-primary" />
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {topic.description}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Footer */}
+      <div className="mt-10 text-center text-sm text-muted-foreground">
+        <p>Pick any topic. Go in any order. Every page is self-contained.</p>
+      </div>
     </div>
   );
 }
