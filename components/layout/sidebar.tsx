@@ -6,8 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useProgress } from "@/hooks/use-progress";
 import { ApiKeyInput } from "@/components/shared/api-key-input";
-import { ModelSelector } from "@/components/shared/model-selector";
-import { useModel } from "@/components/providers/model-provider";
+import { BalanceDisplay } from "@/components/shared/balance-display";
 import { useTheme } from "@/components/providers/theme-provider";
 import {
   BookOpen, Code, MessageSquare, BarChart3,
@@ -32,7 +31,6 @@ const TOPICS = [
 export function Sidebar() {
   const pathname = usePathname();
   const { isVisited } = useProgress();
-  const { model, setModel } = useModel();
   const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -82,11 +80,8 @@ export function Sidebar() {
       <Separator className="bg-[--sidebar-border]" />
 
       <div className="p-4 space-y-3">
-        <div className="space-y-1.5">
-          <label className="text-xs text-[--sidebar-foreground]/50 font-medium">Model</label>
-          <ModelSelector value={model} onChange={setModel} />
-        </div>
         <ApiKeyInput />
+        <BalanceDisplay />
         <button
           onClick={toggleTheme}
           className="flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-xs text-[--sidebar-foreground]/60 hover:text-[--sidebar-foreground] hover:bg-[--sidebar-accent] transition-colors"

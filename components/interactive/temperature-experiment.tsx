@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useChat } from "@/hooks/use-chat";
+import { COMPONENT_MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -15,8 +16,8 @@ export function TemperatureExperiment() {
   const [tempA, setTempA] = useState(0.0);
   const [tempB, setTempB] = useState(1.5);
 
-  const chatA = useChat({ stream: false });
-  const chatB = useChat({ stream: false });
+  const chatA = useChat({ stream: false, model: COMPONENT_MODELS.temperatureExperiment });
+  const chatB = useChat({ stream: false, model: COMPONENT_MODELS.temperatureExperiment });
 
   const isLoading = chatA.isLoading || chatB.isLoading;
 

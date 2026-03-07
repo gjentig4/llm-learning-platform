@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useChat } from "@/hooks/use-chat";
+import { COMPONENT_MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -18,8 +19,8 @@ export function SystemPromptCompare() {
     "What is the capital of Kosovo?"
   );
 
-  const chatA = useChat({ stream: false });
-  const chatB = useChat({ stream: false });
+  const chatA = useChat({ stream: false, model: COMPONENT_MODELS.systemPromptCompare });
+  const chatB = useChat({ stream: false, model: COMPONENT_MODELS.systemPromptCompare });
 
   const isLoading = chatA.isLoading || chatB.isLoading;
 

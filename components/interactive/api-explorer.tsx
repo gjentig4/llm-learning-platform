@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useChat } from "@/hooks/use-chat";
+import { COMPONENT_MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
@@ -16,14 +17,14 @@ export function ApiExplorer() {
   const [rawResponse, setRawResponse] = useState<string | null>(null);
 
   const { sendMessage, response, streamingContent, isLoading, error } =
-    useChat({ temperature, stream: false });
+    useChat({ temperature, stream: false, model: COMPONENT_MODELS.apiExplorer });
 
   const handleSend = async () => {
     if (!message.trim() || isLoading) return;
 
     const requestBody = {
       messages: [{ id: "1", role: "user", content: message }],
-      model: "(from sidebar)",
+      model: COMPONENT_MODELS.apiExplorer,
       temperature,
       stream: false,
       openRouterApiKey: "YOUR_API_KEY",

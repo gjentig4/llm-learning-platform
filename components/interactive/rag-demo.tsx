@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useChat } from "@/hooks/use-chat";
+import { COMPONENT_MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -41,8 +42,8 @@ export function RagDemo() {
   const [showKnowledge, setShowKnowledge] = useState(false);
   const [showAugmented, setShowAugmented] = useState(false);
 
-  const withoutContext = useChat({ stream: false });
-  const withContext = useChat({ stream: false });
+  const withoutContext = useChat({ stream: false, model: COMPONENT_MODELS.ragDemo });
+  const withContext = useChat({ stream: false, model: COMPONENT_MODELS.ragDemo });
 
   const isLoading = withoutContext.isLoading || withContext.isLoading;
 

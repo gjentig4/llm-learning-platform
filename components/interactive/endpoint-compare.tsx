@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useChat } from "@/hooks/use-chat";
+import { COMPONENT_MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ResponseDisplay } from "@/components/shared/response-display";
@@ -9,11 +10,11 @@ import { Zap, Clock } from "lucide-react";
 
 export function EndpointCompare() {
   const [message, setMessage] = useState(
-    "Describe what an API is in 1-2 sentences."
+    "Describe what an API is in 3-4 sentences."
   );
 
-  const streamingChat = useChat({ stream: true });
-  const nonStreamingChat = useChat({ stream: false });
+  const streamingChat = useChat({ stream: true, model: COMPONENT_MODELS.endpointCompare });
+  const nonStreamingChat = useChat({ stream: false, model: COMPONENT_MODELS.endpointCompare });
 
   const isLoading = streamingChat.isLoading || nonStreamingChat.isLoading;
 

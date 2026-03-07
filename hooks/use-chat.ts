@@ -120,6 +120,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
                   setStreamingContent("");
                   setStreamingReasoning("");
                   setIsLoading(false);
+                  window.dispatchEvent(new Event("balance-refresh"));
                   return msg;
                 }
               } catch {}
@@ -132,6 +133,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           const msg = data.message as Message;
           setResponse(msg);
           setIsLoading(false);
+          window.dispatchEvent(new Event("balance-refresh"));
           return msg;
         }
       } catch (err) {

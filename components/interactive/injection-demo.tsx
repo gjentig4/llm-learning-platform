@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useChat } from "@/hooks/use-chat";
+import { COMPONENT_MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ResponseDisplay } from "@/components/shared/response-display";
@@ -39,6 +40,7 @@ export function InjectionDemo() {
   const chat = useChat({
     systemPrompt: SYSTEM_PROMPT,
     stream: true,
+    model: COMPONENT_MODELS.injectionDemo,
   });
 
   const handleSend = async (msg?: string) => {

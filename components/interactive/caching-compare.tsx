@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useChat } from "@/hooks/use-chat";
+import { COMPONENT_MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ResponseDisplay } from "@/components/shared/response-display";
@@ -12,7 +13,7 @@ import { generateCachingPrompt } from "@/lib/caching-prompt";
 export function CachingCompare() {
   const systemPrompt = useMemo(() => generateCachingPrompt(), []);
   const charCount = systemPrompt.length;
-  const approxTokens = Math.round(charCount / 4);
+  const approxTokens = 17209;
 
   const [userMessage, setUserMessage] = useState(
     "Output the following in verbatim: 'FLOSSK'"
@@ -23,11 +24,13 @@ export function CachingCompare() {
   const chatFirst = useChat({
     systemPrompt,
     stream: false,
+    model: COMPONENT_MODELS.cachingCompare,
   });
 
   const chatSecond = useChat({
     systemPrompt,
     stream: false,
+    model: COMPONENT_MODELS.cachingCompare,
   });
 
   const handleFirst = async () => {

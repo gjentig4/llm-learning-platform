@@ -1,23 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useChat } from "@/hooks/use-chat";
+import { COMPONENT_MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ResponseDisplay } from "@/components/shared/response-display";
-import { Send, ExternalLink } from "lucide-react";
+import { Send, ExternalLink, Clock } from "lucide-react";
 
 export function LangfuseDemo() {
   const [message, setMessage] = useState("Explain what a trace is in observability. Answer in 1-2 sentences.");
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const [showTrace, setShowTrace] = useState(false);
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const { sendMessage, response, streamingContent, isLoading, error } =
     useChat({
       enableTracing: true,
       stream: false,
+      model: COMPONENT_MODELS.langfuseDemo,
     });
+
+  // Start countdown when we get a response with a trace URL
+  useEffect(() => {
+    if (response?.metadata?.traceUrl && !showTrace) {
+      setCountdown(5);
+      setShowTrace(false);
+      countdownRef.current = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev === null || prev <= 1) {
+            if (countdownRef.current) clearInterval(countdownRef.current);
+            setShowTrace(true);
+            return null;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (countdownRef.current) clearInterval(countdownRef.current);
+    };
+  }, [response?.metadata?.traceUrl]);
 
   const handleSend = async () => {
     if (!message.trim() || isLoading) return;
+    setShowTrace(false);
+    setCountdown(null);
+    if (countdownRef.current) clearInterval(countdownRef.current);
     await sendMessage(message, { enableTracing: true });
     // Mark Langfuse as introduced
     if (typeof window !== "undefined") {
@@ -60,7 +89,16 @@ export function LangfuseDemo() {
         error={error}
       />
 
-      {response?.metadata?.traceUrl && (
+      {response?.metadata?.traceUrl && countdown !== null && !showTrace && (
+        <div className="p-4 rounded-lg border border-border bg-card flex items-center gap-3">
+          <Clock className="w-4 h-4 text-muted-foreground animate-pulse" />
+          <span className="text-sm text-muted-foreground">
+            Trace incoming in <span className="font-mono font-semibold text-primary">{countdown}</span>...
+          </span>
+        </div>
+      )}
+
+      {response?.metadata?.traceUrl && showTrace && (
         <div className="p-4 rounded-lg border border-border bg-card">
           <a
             href={response.metadata.traceUrl}

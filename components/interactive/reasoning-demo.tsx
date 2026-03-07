@@ -2,23 +2,21 @@
 
 import { useState } from "react";
 import { useChat } from "@/hooks/use-chat";
+import { COMPONENT_MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ResponseDisplay } from "@/components/shared/response-display";
-import { supportsReasoning } from "@/lib/reasoning";
-import { useModel } from "@/components/providers/model-provider";
-import { Brain, AlertTriangle } from "lucide-react";
+import { Brain } from "lucide-react";
 
 const SUGGESTIONS = [
-  "How many r's are in the word 'strawberry'?",
-  "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?",
-  "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+  "Alice is looking at Bob. Bob is looking at Charlie. Alice is married, Charlie is not. Is a married person looking at an unmarried person?",
+  "You have two ropes. Each takes exactly 1 hour to burn, but they burn at non-uniform rates. How can you measure exactly 45 minutes?",
+  "A census taker asks a resident about her children. She says: the product of their ages is 36, and the sum equals my house number. The census taker says he needs more info. She replies: the oldest plays piano. What are the ages?",
 ];
 
 const EFFORT_LEVELS = ["low", "medium", "high"] as const;
 
 export function ReasoningDemo() {
-  const { model } = useModel();
   const [message, setMessage] = useState("");
   const [effort, setEffort] = useState<"low" | "medium" | "high">("medium");
   const [compareMode, setCompareMode] = useState(false);
@@ -27,10 +25,12 @@ export function ReasoningDemo() {
     enableReasoning: true,
     reasoningEffort: effort,
     stream: true,
+    model: COMPONENT_MODELS.reasoningDemo,
   });
 
   const withoutReasoning = useChat({
     stream: true,
+    model: COMPONENT_MODELS.reasoningDemo,
   });
 
   const isLoading = withReasoning.isLoading || withoutReasoning.isLoading;
@@ -52,24 +52,8 @@ export function ReasoningDemo() {
     }
   };
 
-  const modelSupported = supportsReasoning(model);
-
   return (
     <div className="space-y-4">
-      {/* Model support note */}
-      {!modelSupported && (
-        <div className="p-3 rounded-lg border border-amber-200 dark:border-amber-800/50 bg-amber-50 dark:bg-amber-950/30 text-sm text-amber-800 dark:text-amber-300 flex items-start gap-2">
-          <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
-          <div>
-            <strong>{model}</strong> may not support reasoning. Try{" "}
-            <code className="text-xs bg-amber-100 dark:bg-amber-900/50 px-1 rounded">deepseek/deepseek-r1</code> (shows full thinking),{" "}
-            <code className="text-xs bg-amber-100 dark:bg-amber-900/50 px-1 rounded">anthropic/claude-haiku-4.5</code> (summarized thinking), or{" "}
-            <code className="text-xs bg-amber-100 dark:bg-amber-900/50 px-1 rounded">google/gemini-2.5-flash-thinking</code>.
-            Note: OpenAI o-series models reason internally but don&apos;t expose their thinking.
-          </div>
-        </div>
-      )}
-
       {/* Effort selector */}
       <div className="space-y-2">
         <label className="text-sm text-muted-foreground flex items-center gap-2">
