@@ -20,57 +20,50 @@ const TOPICS = [
     href: "/api-basics",
     icon: Code,
     title: "API Basics",
-    description:
-      "Make your first API call. Pick a model, send a prompt, see what comes back.",
+    description: "Make an API call, adjust temperature, compare streaming vs non-streaming.",
+    tag: "Start here",
   },
   {
     href: "/system-prompts",
     icon: MessageSquare,
     title: "System Prompts",
-    description:
-      "Same question, completely different answers. All from one hidden instruction.",
+    description: "Same question, two system prompts, completely different answers.",
   },
   {
     href: "/observability",
     icon: BarChart3,
     title: "Observability",
-    description:
-      "What did your AI just do? How much did it cost? Find out.",
+    description: "Trace a call with Langfuse. See tokens, cost, latency.",
   },
   {
     href: "/prompt-caching",
     icon: HardDrive,
     title: "Prompt Caching",
-    description:
-      "Stop paying to process the same prompt over and over.",
+    description: "Send 17k tokens twice. The second one hits the cache.",
   },
   {
     href: "/tool-calling",
     icon: Wrench,
     title: "Tool Calling",
-    description:
-      "LLMs can't check the weather. Unless you give them a function that can.",
+    description: "Give the model a weather function and watch it call it.",
   },
   {
     href: "/rag",
     icon: Database,
     title: "RAG",
-    description:
-      "Models don't know about FLOSSK. Let's give them some context and fix that.",
+    description: "The model doesn't know about FLOSSK. Inject context and fix that.",
   },
   {
     href: "/reasoning",
     icon: Brain,
     title: "Reasoning",
-    description:
-      "Some questions need a scratchpad. Let the model think before it answers.",
+    description: "Toggle thinking on. See how the model works through a logic puzzle.",
   },
   {
     href: "/security",
     icon: Shield,
     title: "Security",
-    description:
-      "LLMs can't tell instructions from data. Try to exploit that.",
+    description: "There's a fake API key in the system prompt. Try to extract it.",
   },
 ];
 
@@ -84,49 +77,67 @@ export default function Home() {
         <h1 className="text-5xl md:text-6xl font-serif text-foreground mb-4">
           Building with LLMs
         </h1>
-        <p className="text-lg text-muted-foreground leading-relaxed">
-          A hands-on FLOSSK workshop — every page
-          has interactive demos that make real API calls. You'll type prompts,
-          tweak parameters, and see what happens. That's how you learn this stuff.
+        <p className="text-lg text-muted-foreground leading-[1.7]">
+          Every page here has a live demo. You type a prompt, it makes a real
+          API call, you see what comes back — tokens used, cost, latency,
+          the whole response. The topics go from basic API calls to tool use,
+          RAG, reasoning, and prompt injection. Pick one and start.
         </p>
       </div>
 
-      {/* API Key — friendly nudge */}
+      {/* API Key */}
       {!hasKey && (
-        <div className="mb-10 p-5 rounded-xl bg-card border border-border">
-          <h2 className="text-base font-semibold text-foreground mb-1">
-            Before you start
-          </h2>
-          <p className="text-sm text-muted-foreground mb-3">
-            The demos need an OpenRouter API key. Free models are available — no credit card required.
-          </p>
-          <div className="max-w-md">
-            <ApiKeyInput />
+        <div className="mb-10 lab-card rounded-xl overflow-hidden">
+          <div className="flex items-center gap-2 px-4 py-2.5">
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+              Before you start
+            </span>
+          </div>
+          <div className="px-4 pb-4 pt-1">
+            <p className="text-sm text-foreground/80 leading-[1.7] mb-3">
+              You need an OpenRouter API key — it's what connects you to the models.
+              Free tier works fine, no credit card.{" "}
+              <a
+                href="https://openrouter.ai/keys"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 underline decoration-primary/30 hover:decoration-primary/60 transition-colors"
+              >
+                Get one here
+              </a>
+              .
+            </p>
+            <div className="max-w-sm">
+              <ApiKeyInput />
+            </div>
           </div>
         </div>
       )}
 
-      {/* Topic Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Topics */}
+      <div className="space-y-3">
         {TOPICS.map((topic) => {
           const Icon = topic.icon;
           return (
             <Link
               key={topic.href}
               href={topic.href}
-              className="group p-5 rounded-xl border border-border bg-card hover:bg-secondary transition-colors"
+              className="group flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary transition-colors"
             >
-              <div className="flex items-start gap-3">
-                <Icon className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-foreground/90 group-hover:text-foreground flex items-center gap-2">
-                    {topic.title}
-                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-primary" />
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {topic.description}
-                  </p>
-                </div>
+              <Icon className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-semibold text-foreground/90 group-hover:text-foreground flex items-center gap-2">
+                  {topic.title}
+                  {topic.tag && (
+                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                      {topic.tag}
+                    </span>
+                  )}
+                  <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-primary ml-auto shrink-0" />
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  {topic.description}
+                </p>
               </div>
             </Link>
           );
@@ -135,7 +146,18 @@ export default function Home() {
 
       {/* Footer */}
       <div className="mt-10 text-center text-sm text-muted-foreground">
-        <p>Pick any topic. Go in any order. Every page is self-contained.</p>
+        <p>
+          A{" "}
+          <a
+            href="https://flossk.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:text-primary/80 underline decoration-primary/30 hover:decoration-primary/60 transition-colors"
+          >
+            FLOSSK
+          </a>{" "}
+          workshop. Go in any order — every page is self-contained.
+        </p>
       </div>
     </div>
   );
